@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo/utils/DialogBox.dart';
 import 'package:todo/utils/Todo_items.dart';
 import '../database/database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -78,6 +79,20 @@ class _HomePageState extends State<HomePage> {
               fontWeight: FontWeight.bold,
             ),
           ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+              child: GestureDetector(
+                onTap: () {
+                  FirebaseAuth.instance.signOut();
+                },
+                child: Icon(
+                  Icons.logout,
+                  size: 30,
+                ),
+              ),
+            ),
+          ],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: createTask,

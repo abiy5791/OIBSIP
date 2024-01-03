@@ -7,12 +7,13 @@ class buttonComponent extends StatelessWidget {
   String btnName;
   Color? btnColor;
   Color? btnTextColor;
-  buttonComponent(
-      {required this.btnName,
-      this.btnColor,
-      this.onPressed,
-      this.btnTextColor,
-      super.key});
+  buttonComponent({
+    required this.btnName,
+    this.btnColor,
+    this.onPressed,
+    this.btnTextColor,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

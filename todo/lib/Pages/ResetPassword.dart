@@ -6,34 +6,30 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:todo/Pages/ResetPassword.dart';
 
-import 'package:todo/Pages/SignupPage.dart';
-import 'package:todo/main.dart';
 import 'package:todo/utils/buttonComponent.dart';
 import 'package:todo/utils/snackbarUtils.dart';
 import 'package:todo/utils/textfieldComponent.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class ResetPassword extends StatefulWidget {
+  const ResetPassword({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<ResetPassword> createState() => _ResetPasswordState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _ResetPasswordState extends State<ResetPassword> {
   final formkey = GlobalKey<FormState>();
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
 
   @override
   void dispose() {
     emailController.dispose();
-    passwordController.dispose();
+
     super.dispose();
   }
 
-  Future SignIn() async {
+  Future _ResetPassword() async {
     final isvalid = formkey.currentState!.validate();
     if (!isvalid) return;
     showDialog(
@@ -42,15 +38,15 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context) => Center(child: CircularProgressIndicator()));
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.sendPasswordResetEmail(
         email: emailController.text.trim(),
-        password: passwordController.text.trim(),
       );
+      utils.showSnackBar("Password reset email is sent!");
+      Navigator.of(context).popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
-      // print(e);
+      Navigator.of(context).pop();
       utils.showSnackBar(e.message);
     }
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 
   @override
@@ -108,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Login",
+                    "ResetPassword",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 30,
@@ -132,101 +128,17 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       }),
                   SizedBox(
-                    height: 5,
-                  ),
-                  TextfieldComponent(
-                      controller: passwordController,
-                      labelName: "Password",
-                      textInputType: TextInputType.visiblePassword,
-                      validator: (value) {
-                        if (value == '') {
-                          return 'The password field is required!';
-                        }
-                        if (value != null && value.length < 6) {
-                          return 'Enter min. 6 characters!';
-                        } else {
-                          return null;
-                        }
-                      }),
-                  SizedBox(
                     height: 10,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (BuildContext) {
-                          return SignupPage();
-                        }),
-                      );
-                    },
-                    child: Text(
-                      "I don't have an account!",
-                      style: TextStyle(
-                          color: Color.fromARGB(243, 194, 228, 255),
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                  SizedBox(height: 20),
                   buttonComponent(
-                    btnName: 'Login',
-                    onPressed: SignIn,
+                    btnName: 'ResetPassword',
+                    onPressed: _ResetPassword,
                     btnColor: Colors.white,
                     btnTextColor: Colors.black,
                   ),
                   SizedBox(
                     height: 10,
                   ),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (BuildContext) {
-                          return ResetPassword();
-                        }));
-                      },
-                      child: Text(
-                        "forgot password?",
-                        style: TextStyle(
-                          color: Colors.green[100],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Center(
-                    child: Text(
-                      "SignIn With",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Icon(
-                        Icons.phone,
-                        size: 38,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: Image.network(
-                              'http://pngimg.com/uploads/google/google_PNG19635.png',
-                              fit: BoxFit.cover)),
-                      Icon(
-                        Icons.apple,
-                        size: 38,
-                        color: Colors.white,
-                      ),
-                    ],
-                  )
                 ],
               ),
             ),

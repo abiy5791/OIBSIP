@@ -7,19 +7,26 @@ class TextfieldComponent extends StatelessWidget {
   Color? inputColor;
   Color? labelColor;
   TextInputType? textInputType;
+  TextEditingController controller;
+  String? Function(String?)? validator;
   TextfieldComponent(
       {required this.labelName,
+      required this.controller,
       this.inputColor = Colors.white,
       this.textInputType,
       this.labelColor = Colors.white70,
+      this.validator,
       super.key});
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       style: TextStyle(
         color: inputColor,
       ),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: validator,
+      controller: controller,
       keyboardType: textInputType,
       decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
